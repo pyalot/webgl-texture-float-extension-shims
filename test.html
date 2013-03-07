@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="webgl-texture-float-extension-shims.js"></script>
+        <script type="text/javascript">
+            var resultTable;
+
+            var addRow = function(name, present, shim){
+                var tr = document.createElement('tr')
+                resultTable.appendChild(tr)
+
+                var td = document.createElement('td')
+                td.textContent = name
+                tr.appendChild(td)
+                
+                var td = document.createElement('td')
+                td.textContent = present
+                tr.appendChild(td)
+                
+                var td = document.createElement('td')
+                td.textContent = shim
+                tr.appendChild(td)
+
+            }
+            var checkExtension = function(gl, name){
+                var ext = gl.getExtension(name);
+                if(ext){
+                    if(ext.shim){
+                        addRow(name, 'yes', 'yes')
+                    }
+                    else{
+                        addRow(name, 'yes', '')
+                    }
+                }
+                else{
+                    addRow(name, 'no', '')
+                }
+            }
+            window.onload = function(){
+                var div = document.createElement('div')
+                document.body.appendChild(div)
+
+
+                resultTable = document.createElement('table')
+                document.body.appendChild(resultTable)
+
+                var tr = document.createElement('tr')
+                resultTable.appendChild(tr)
+
+                var td = document.createElement('th')
+                td.textContent = 'Name'
+                tr.appendChild(td)
+                
+                var td = document.createElement('th')
+                td.textContent = 'Present'
+                tr.appendChild(td)
+                
+                var td = document.createElement('th')
+                td.textContent = 'Is Shim'
+                tr.appendChild(td)
+
+
+                var canvas = document.getElementsByTagName('canvas')[0];
+                var gl = canvas.getContext('experimental-webgl');
+                div.textContent = 'Supported Extensions: ' + gl.getSupportedExtensions().join(', ')
+
+                checkExtension(gl, 'OES_texture_float')
+                checkExtension(gl, 'WEBGL_color_buffer_float')
+                checkExtension(gl, 'OES_texture_float_linear')
+                
+                checkExtension(gl, 'OES_texture_half_float')
+                checkExtension(gl, 'EXT_color_buffer_half_float')
+                checkExtension(gl, 'OES_texture_half_float_linear')
+            }
+        </script>
+        <style type="text/css">
+            body{
+                font-family: sans-serif;
+            }
+            canvas{
+                display: none;
+            }
+            table{
+                border-collapse: collapse;
+            }
+            td, th{
+                padding: 5px;
+                border: 1px solid #333;
+            }
+            th{
+                background-color: #ddd;
+                border-bottom: 2px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas></canvas>
+        <h1>WebGL texture float extension shim test</h1>
+    </body>
+</html>
