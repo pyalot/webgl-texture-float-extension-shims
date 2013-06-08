@@ -5,7 +5,7 @@ In order to reliably work with floating point textures in WebGL it is required t
 
 Some extensions have been proposed or are in draft that help with this. Unfortunately they face resistance by Khronos and even if approved, implementations may lag substantially.
 
-The purpose of this library is to support these extensions as shims in the form of feature detection.
+The purpose of this library is to support these extensions as shims in the form of feature detection. The libary does also verify that the extensions actually offered perform as promised, which is not always the case. In case that capabilities are found to be lacking, the extensions are blacklisted.
 
 Shimmed extensions
 ------------------
@@ -20,8 +20,47 @@ Modified WebGL calls
 
 To make integration seamless this shim modifies calls to getSupportedExtensions and getExtension.
 
-Additions
----------
+Handling of vendor prefixes
+---------------------------
+
+It is recommended you include the vendor prefix nuke before including the shim libary
+        
+```html
+    <script src="webgl-nuke-vendor-prefix.js"></script>
+```
+
+Convenience functionality
+-------------------------
+
+If you do not care to interprete and handle the 6 extensions that together express floating point support, you can use the function getFloatExtension on the WebGL context.
+
+```javascript
+    var ext = gl.getFloatExtension({
+        require: ['renderable'],
+        prefer: ['filterable', 'half']
+    });
+    console.log(ext.precision, ext.filterable, ext.renderable);
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, ext.type, null);
+```
+
+The call to getFloatExtension accepts:
+
+ * require: a list of required capability, such as filterable, renderable, half or single
+ * prefer: a list of preferred capability such as filterable, renderable, half or single
+
+Prefer is evaluated from first to last, so earlier preferences take precedence over latter ones.
+
+The returned object contains:
+
+ * renderable: true or false
+ * filterable: true or false
+ * precision: half or single
+ * type: the gl enumerant for this type
+
+Extension Object Additions
+--------------------------
 
 If an extension is provided by a shim, the extension object will carry an attribute named shim to signal that.
 
