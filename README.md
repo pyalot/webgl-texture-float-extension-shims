@@ -47,8 +47,9 @@ If you do not care to interprete and handle the 6 extensions that together expre
 
 The call to getFloatExtension accepts:
 
- * require: a list of required capability, such as filterable, renderable, half or single
- * prefer: a list of preferred capability such as filterable, renderable, half or single
+ * require: defaults to empty list, a list of required capability, such as filterable, renderable, half or single
+ * prefer: defaults to single item, half, a list of preferred capability such as filterable, renderable, half or single
+ * throws: defaults to true, throws exception if requires are not satisfied, return null when false
 
 Prefer is evaluated from first to last, so earlier preferences take precedence over latter ones.
 
